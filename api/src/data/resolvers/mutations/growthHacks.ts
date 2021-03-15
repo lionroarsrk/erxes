@@ -10,7 +10,8 @@ import {
   itemsChange,
   itemsCopy,
   itemsEdit,
-  itemsRemove
+  itemsRemove,
+  itemsSort
 } from './boardUtils';
 
 interface IGrowthHacksEdit extends IGrowthHack {
@@ -131,6 +132,18 @@ const growthHackMutations = {
     { user }: IContext
   ) {
     return itemsArchive(stageId, 'growthHack', proccessId, user);
+  },
+
+  async growthHacksSort(
+    _root,
+    {
+      stageId,
+      proccessId,
+      type
+    }: { stageId: string; proccessId: string; type: string },
+    { user }: IContext
+  ) {
+    return itemsSort(stageId, type, 'deal', proccessId, user);
   }
 };
 
@@ -143,5 +156,6 @@ checkPermission(
   'growthHacksArchive',
   'growthHacksArchive'
 );
+checkPermission(growthHackMutations, 'growthHacksSort', 'growthHacksSort');
 
 export default growthHackMutations;

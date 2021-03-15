@@ -53,4 +53,5 @@ export const mutations = `
   ticketsWatch(_id: String, isAdd: Boolean): Ticket
   ticketsCopy(_id: String!, proccessId: String): Ticket
   ticketsArchive(stageId: String!, proccessId: String): String
+  ticketsSort(stageId: String!, proccessId: String, type: String): String
 `;

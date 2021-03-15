@@ -11,7 +11,8 @@ import {
   itemsChange,
   itemsCopy,
   itemsEdit,
-  itemsRemove
+  itemsRemove,
+  itemsSort
 } from './boardUtils';
 
 interface IDealsEdit extends IDeal {
@@ -141,6 +142,18 @@ const dealMutations = {
     { user }: IContext
   ) {
     return itemsArchive(stageId, 'deal', proccessId, user);
+  },
+
+  async dealsSort(
+    _root,
+    {
+      stageId,
+      proccessId,
+      type
+    }: { stageId: string; proccessId: string; type: string },
+    { user }: IContext
+  ) {
+    return itemsSort(stageId, type, 'deal', proccessId, user);
   }
 };
 
@@ -149,5 +162,6 @@ checkPermission(dealMutations, 'dealsEdit', 'dealsEdit');
 checkPermission(dealMutations, 'dealsRemove', 'dealsRemove');
 checkPermission(dealMutations, 'dealsWatch', 'dealsWatch');
 checkPermission(dealMutations, 'dealsArchive', 'dealsArchive');
+checkPermission(dealMutations, 'dealsSort', 'dealsSort');
 
 export default dealMutations;

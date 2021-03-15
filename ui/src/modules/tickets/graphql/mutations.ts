@@ -67,6 +67,12 @@ const ticketsArchive = `
   }
 `;
 
+const ticketsSort = `
+  mutation ticketsSort($stageId: String!, $proccessId: String, $type: String) {
+    ticketsSort(stageId: $stageId, proccessId: $proccessId, type: $type)
+  }
+`;
+
 const ticketsCopy = `
   mutation ticketsCopy($_id: String!, $proccessId: String) {
     ticketsCopy(_id: $_id, proccessId: $proccessId) {
@@ -83,5 +89,6 @@ export default {
   ticketsChange,
   ticketsWatch,
   ticketsArchive,
+  ticketsSort,
   ticketsCopy
 };

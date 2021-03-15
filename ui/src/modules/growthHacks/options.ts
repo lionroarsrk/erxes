@@ -20,6 +20,7 @@ const options = {
     changeMutation: 'growthHacksChange',
     watchMutation: 'growthHacksWatch',
     archiveMutation: 'growthHacksArchive',
+    sortMutation: 'growthHacksSort',
     copyMutation: 'growthHacksCopy'
   },
   queries: {
@@ -35,6 +36,7 @@ const options = {
     changeMutation: mutations.growthHacksChange,
     watchMutation: mutations.growthHacksWatch,
     archiveMutation: mutations.growthHacksArchive,
+    sortMutation: mutations.growthHacksSort,
     copyMutation: mutations.growthHacksCopy
   },
   texts: {

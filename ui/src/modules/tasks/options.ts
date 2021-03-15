@@ -21,6 +21,7 @@ const options = {
     changeMutation: 'tasksChange',
     watchMutation: 'tasksWatch',
     archiveMutation: 'tasksArchive',
+    sortMutation: 'tasksSort',
     copyMutation: 'tasksCopy',
     updateTimeTrackMutation: 'updateTimeTrack'
   },
@@ -37,6 +38,7 @@ const options = {
     changeMutation: mutations.tasksChange,
     watchMutation: mutations.tasksWatch,
     archiveMutation: mutations.tasksArchive,
+    sortMutation: mutations.tasksSort,
     copyMutation: mutations.tasksCopy,
     updateTimeTrackMutation: mutations.taskUpdateTimeTracking
   },

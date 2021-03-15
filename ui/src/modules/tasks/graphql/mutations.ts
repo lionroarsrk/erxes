@@ -56,6 +56,12 @@ const tasksArchive = `
   }
 `;
 
+const tasksSort = `
+  mutation tasksSort($stageId: String!, $proccessId: String, $type: String) {
+    tasksSort(stageId: $stageId, proccessId: $proccessId, type: $type)
+  }
+`;
+
 const tasksCopy = `
   mutation tasksCopy($_id: String!, $proccessId: String) {
     tasksCopy(_id: $_id, proccessId: $proccessId) {
@@ -77,6 +83,7 @@ export default {
   tasksChange,
   tasksWatch,
   tasksArchive,
+  tasksSort,
   tasksCopy,
   taskUpdateTimeTracking
 };

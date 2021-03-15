@@ -84,4 +84,5 @@ export const mutations = `
   growthHacksVote(_id: String!, isVote: Boolean): GrowthHack
   growthHacksCopy(_id: String!, proccessId: String): GrowthHack
   growthHacksArchive(stageId: String!, proccessId: String): String
+  growthHacksSort(stageId: String!, proccessId: String, type: String): String
 `;

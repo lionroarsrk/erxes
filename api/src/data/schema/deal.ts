@@ -83,4 +83,5 @@ export const mutations = `
   dealsWatch(_id: String, isAdd: Boolean): Deal
   dealsCopy(_id: String!, proccessId: String): Deal
   dealsArchive(stageId: String!, proccessId: String): String
+  dealsSort(stageId: String!, proccessId: String, type: String): String
 `;

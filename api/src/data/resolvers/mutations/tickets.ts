@@ -9,7 +9,8 @@ import {
   itemsChange,
   itemsCopy,
   itemsEdit,
-  itemsRemove
+  itemsRemove,
+  itemsSort
 } from './boardUtils';
 
 interface ITicketsEdit extends ITicket {
@@ -95,6 +96,18 @@ const ticketMutations = {
     { user }: IContext
   ) {
     return itemsArchive(stageId, 'ticket', proccessId, user);
+  },
+
+  async ticketsSort(
+    _root,
+    {
+      stageId,
+      proccessId,
+      type
+    }: { stageId: string; proccessId: string; type: string },
+    { user }: IContext
+  ) {
+    return itemsSort(stageId, type, 'deal', proccessId, user);
   }
 };
 
@@ -103,5 +116,6 @@ checkPermission(ticketMutations, 'ticketsEdit', 'ticketsEdit');
 checkPermission(ticketMutations, 'ticketsRemove', 'ticketsRemove');
 checkPermission(ticketMutations, 'ticketsWatch', 'ticketsWatch');
 checkPermission(ticketMutations, 'ticketsArchive', 'ticketsArchive');
+checkPermission(ticketMutations, 'ticketsSort', 'ticketsSort');
 
 export default ticketMutations;

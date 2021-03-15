@@ -135,6 +135,37 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
     });
   };
 
+  sortItems = (type: string) => {
+    const { options, stage, onLoad } = this.props;
+    const stageId = stage._id;
+    console.log(type, 'contttttttttttt', stageId);
+
+    confirm(__(`Sort by ${type} in This List?`)).then(() => {
+      const proccessId = Math.random().toString();
+      localStorage.setItem('proccessId', proccessId);
+
+      client
+        .mutate({
+          mutation: gql(options.mutations.sortMutation),
+          variables: { stageId },
+          refetchQueries: [
+            {
+              query: gql(queries.stageDetail),
+              variables: { _id: stageId, proccessId }
+            }
+          ]
+        })
+        .then(() => {
+          Alert.success('ReSorted items has been sorted.');
+
+          onLoad(stageId, []);
+        })
+        .catch((e: Error) => {
+          Alert.error(e.message);
+        });
+    });
+  };
+
   archiveList = () => {
     const { stage, refetchStages, options } = this.props;
 
@@ -188,6 +219,7 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
         length={length}
         items={items}
         archiveItems={this.archiveItems}
+        sortItems={this.sortItems}
         archiveList={this.archiveList}
         removeStage={this.removeStage}
         loadingItems={loadingItems}

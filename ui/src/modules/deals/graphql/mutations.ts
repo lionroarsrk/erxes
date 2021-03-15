@@ -69,6 +69,12 @@ const dealsArchive = `
   }
 `;
 
+const dealsSort = `
+  mutation dealsSort($stageId: String!, $proccessId: String, $type: String) {
+    dealsSort(stageId: $stageId, proccessId: $proccessId, type: $type)
+  }
+`;
+
 const dealsCopy = `
   mutation dealsCopy($_id: String!, $proccessId: String) {
     dealsCopy(_id: $_id, proccessId: $proccessId) {
@@ -85,5 +91,6 @@ export default {
   dealsChange,
   dealsWatch,
   dealsArchive,
+  dealsSort,
   dealsCopy
 };

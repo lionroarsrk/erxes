@@ -93,6 +93,12 @@ const growthHacksArchive = `
   }
 `;
 
+const growthHacksSort = `
+  mutation growthHacksSort($stageId: String!, $proccessId: String, $type: String) {
+    growthHacksSort(stageId: $stageId, proccessId: $proccessId, type: $type)
+  }
+`;
+
 const growthHacksCopy = `
   mutation growthHacksCopy($_id: String!, $proccessId: String) {
     growthHacksCopy(_id: $_id, proccessId: $proccessId) {
@@ -109,5 +115,6 @@ export default {
   growthHacksWatch,
   growthHacksVote,
   growthHacksArchive,
+  growthHacksSort,
   growthHacksCopy
 };

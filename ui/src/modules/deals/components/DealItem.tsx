@@ -118,7 +118,7 @@ class DealItem extends React.PureComponent<Props> {
         </PriceContainer>
 
         <DueDateLabel closeDate={closeDate} isComplete={isComplete} />
-
+        {item.order}
         <Footer>
           {item.isWatched ? <Icon icon="eye" /> : __('Last updated')}
           <Right>{this.renderDate(item.modifiedAt)}</Right>

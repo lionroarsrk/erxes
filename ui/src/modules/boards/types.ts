@@ -31,6 +31,7 @@ export interface IOptions {
     watchMutation: string;
     copyMutation: string;
     archiveMutation: string;
+    sortMutation: string;
   };
   queries: {
     itemsQuery: string;
@@ -45,6 +46,7 @@ export interface IOptions {
     changeMutation: string;
     watchMutation: string;
     archiveMutation: string;
+    sortMutation: string;
     copyMutation: string;
     updateTimeTrackMutation?: string;
   };

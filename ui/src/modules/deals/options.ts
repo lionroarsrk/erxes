@@ -21,6 +21,7 @@ const options = {
     changeMutation: 'dealsChange',
     watchMutation: 'dealsWatch',
     archiveMutation: 'dealsArchive',
+    sortMutation: 'dealsSort',
     copyMutation: 'dealsCopy',
     updateTimeTrackMutation: 'updateTimeTrack'
   },
@@ -37,6 +38,7 @@ const options = {
     changeMutation: mutations.dealsChange,
     watchMutation: mutations.dealsWatch,
     archiveMutation: mutations.dealsArchive,
+    sortMutation: mutations.dealsSort,
     copyMutation: mutations.dealsCopy,
     updateTimeTrackMutation: ``
   },

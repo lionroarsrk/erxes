@@ -97,6 +97,8 @@ export const itemsAdd = async (
   doc.initialStageId = doc.stageId;
   doc.watchedUserIds = [user._id];
 
+  console.log('gggggggggggg', doc.aboveItemId);
+
   const extendedDoc = {
     ...docModifier(doc),
     modifiedBy: user._id,
@@ -593,6 +595,53 @@ export const itemsArchive = async (
       }
     });
   }
+
+  return 'ok';
+};
+
+export const itemsSort = async (
+  stageId: string,
+  sortType: string,
+  type: string,
+  proccessId: string,
+  user: IUserDocument
+) => {
+  const { collection } = getCollection(type);
+  console.log(stageId, sortType, proccessId, user._id, collection);
+
+  // const items = await collection.find({
+  //   stageId,
+  //   status: { $ne: BOARD_STATUSES.ARCHIVED }
+  // });
+
+  // await collection.updateMany(
+  //   { stageId },
+  //   { $set: { status: BOARD_STATUSES.ARCHIVED } }
+  // );
+
+  // // order notification
+  // const stage = await Stages.getStage(stageId);
+
+  // for (const item of items) {
+  //   await ActivityLogs.createArchiveLog({
+  //     item,
+  //     contentType: type,
+  //     action: 'archived',
+  //     userId: user._id
+  //   });
+
+  //   graphqlPubsub.publish('pipelinesChanged', {
+  //     pipelinesChanged: {
+  //       _id: stage.pipelineId,
+  //       proccessId,
+  //       action: 'itemsRemove',
+  //       data: {
+  //         item,
+  //         destinationStageId: stage._id
+  //       }
+  //     }
+  //   });
+  // }
 
   return 'ok';
 };

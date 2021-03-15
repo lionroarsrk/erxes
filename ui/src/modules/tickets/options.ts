@@ -21,6 +21,7 @@ const options = {
     changeMutation: 'ticketsChange',
     watchMutation: 'ticketsWatch',
     archiveMutation: 'ticketsArchive',
+    sortMutation: 'ticketsSort',
     copyMutation: 'ticketsCopy'
   },
   queries: {
@@ -36,6 +37,7 @@ const options = {
     changeMutation: mutations.ticketsChange,
     watchMutation: mutations.ticketsWatch,
     archiveMutation: mutations.ticketsArchive,
+    sortMutation: mutations.ticketsSort,
     copyMutation: mutations.ticketsCopy
   },
   texts: {

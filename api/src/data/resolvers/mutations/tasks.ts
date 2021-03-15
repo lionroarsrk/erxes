@@ -12,7 +12,8 @@ import {
   itemsChange,
   itemsCopy,
   itemsEdit,
-  itemsRemove
+  itemsRemove,
+  itemsSort
 } from './boardUtils';
 
 interface ITasksEdit extends ITask {
@@ -99,6 +100,18 @@ const taskMutations = {
     return itemsArchive(stageId, 'task', proccessId, user);
   },
 
+  async tasksSort(
+    _root,
+    {
+      stageId,
+      proccessId,
+      type
+    }: { stageId: string; proccessId: string; type: string },
+    { user }: IContext
+  ) {
+    return itemsSort(stageId, type, 'deal', proccessId, user);
+  },
+
   async taskUpdateTimeTracking(
     _root,
     {
@@ -117,6 +130,7 @@ checkPermission(taskMutations, 'tasksEdit', 'tasksEdit');
 checkPermission(taskMutations, 'tasksRemove', 'tasksRemove');
 checkPermission(taskMutations, 'tasksWatch', 'tasksWatch');
 checkPermission(taskMutations, 'tasksArchive', 'tasksArchive');
+checkPermission(taskMutations, 'tasksSort', 'tasksSort');
 checkPermission(
   taskMutations,
   'taskUpdateTimeTracking',
