@@ -107,7 +107,7 @@ export default class Stage extends React.Component<Props, {}> {
   };
 
   renderAddItemTrigger() {
-    const { options, stage, onAddItem, items } = this.props;
+    const { options, stage, onAddItem } = this.props;
     const addText = options.texts.addText;
 
     const trigger = (
@@ -124,7 +124,7 @@ export default class Stage extends React.Component<Props, {}> {
       showSelect: false,
       callback: (item: IItem) => onAddItem(stage._id, item),
       stageId: stage._id,
-      aboveItemId: items.length > 0 ? items[items.length - 1]._id : ''
+      aboveItemId: ''
     };
 
     const content = props => <AddForm {...props} {...formProps} />;
