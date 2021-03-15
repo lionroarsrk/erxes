@@ -136,9 +136,8 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
   };
 
   sortItems = (type: string) => {
-    const { options, stage, onLoad } = this.props;
+    const { options, stage, onLoad, itemsQuery } = this.props;
     const stageId = stage._id;
-    console.log(type, 'contttttttttttt', stageId);
 
     confirm(__(`Sort by ${type} in This List?`)).then(() => {
       const proccessId = Math.random().toString();
@@ -147,7 +146,7 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
       client
         .mutate({
           mutation: gql(options.mutations.sortMutation),
-          variables: { stageId },
+          variables: { stageId, proccessId, type },
           refetchQueries: [
             {
               query: gql(queries.stageDetail),
@@ -157,8 +156,10 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
         })
         .then(() => {
           Alert.success('ReSorted items has been sorted.');
-
-          onLoad(stageId, []);
+          const items = itemsQuery
+            ? itemsQuery[options.queriesName.itemsQuery]
+            : [] || [];
+          onLoad(stage._id, items);
         })
         .catch((e: Error) => {
           Alert.error(e.message);

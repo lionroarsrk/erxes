@@ -204,7 +204,7 @@ export default class Stage extends React.Component<Props, {}> {
       sortItems('modified-desc');
     };
     const sortModifiedAsc = () => {
-      sortItems('modified-acs');
+      sortItems('modified-asc');
     };
     const sortAlphaDesc = () => {
       sortItems('alphabetically-asc');
@@ -244,6 +244,7 @@ export default class Stage extends React.Component<Props, {}> {
               </li>
             </Dropdown.Menu>
           </Dropdown>
+          <li></li>
           <li></li>
           <li></li>
         </ActionList>

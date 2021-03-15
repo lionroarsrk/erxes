@@ -107,7 +107,7 @@ const ticketMutations = {
     }: { stageId: string; proccessId: string; type: string },
     { user }: IContext
   ) {
-    return itemsSort(stageId, type, 'deal', proccessId, user);
+    return itemsSort(stageId, type, 'ticket', proccessId, user);
   }
 };
 

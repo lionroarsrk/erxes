@@ -97,8 +97,6 @@ export const itemsAdd = async (
   doc.initialStageId = doc.stageId;
   doc.watchedUserIds = [user._id];
 
-  console.log('gggggggggggg', doc.aboveItemId);
-
   const extendedDoc = {
     ...docModifier(doc),
     modifiedBy: user._id,
@@ -607,41 +605,62 @@ export const itemsSort = async (
   user: IUserDocument
 ) => {
   const { collection } = getCollection(type);
-  console.log(stageId, sortType, proccessId, user._id, collection);
+  console.log(stageId, type, sortType, proccessId, user._id);
 
-  // const items = await collection.find({
-  //   stageId,
-  //   status: { $ne: BOARD_STATUSES.ARCHIVED }
-  // });
+  const sort: { [key: string]: any } = {};
+  switch (sortType) {
+    case 'created-asc':
+      sort.createdAt = 1;
+      break;
 
-  // await collection.updateMany(
-  //   { stageId },
-  //   { $set: { status: BOARD_STATUSES.ARCHIVED } }
-  // );
+    case 'created-desc':
+      sort.createdAt = -1;
+      break;
 
-  // // order notification
-  // const stage = await Stages.getStage(stageId);
+    case 'modified-asc':
+      sort.modifiedAt = 1;
+      break;
 
-  // for (const item of items) {
-  //   await ActivityLogs.createArchiveLog({
-  //     item,
-  //     contentType: type,
-  //     action: 'archived',
-  //     userId: user._id
-  //   });
+    case 'modified-desc':
+      sort.modifiedAt = -1;
+      break;
 
-  //   graphqlPubsub.publish('pipelinesChanged', {
-  //     pipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //       proccessId,
-  //       action: 'itemsRemove',
-  //       data: {
-  //         item,
-  //         destinationStageId: stage._id
-  //       }
-  //     }
-  //   });
-  // }
+    case 'alphabetically-asc':
+      sort.name = 1;
+  }
+
+  const items = await collection
+    .find({
+      stageId,
+      status: { $ne: BOARD_STATUSES.ARCHIVED }
+    })
+    .sort(sort);
+
+  // order notification
+  const stage = await Stages.getStage(stageId);
+  let orderNum = 100;
+  for (const item of items) {
+    item.order = orderNum;
+    await collection.updateOne(
+      { _id: item._id },
+      { $set: { order: orderNum } }
+    );
+    await item.save();
+
+    graphqlPubsub.publish('pipelinesChanged', {
+      pipelinesChanged: {
+        _id: stage.pipelineId,
+        proccessId,
+        action: 'orderUpdated',
+        data: {
+          item,
+          destinationStageId: stage._id
+        }
+      }
+    });
+
+    orderNum = orderNum + 10;
+  }
 
   return 'ok';
 };

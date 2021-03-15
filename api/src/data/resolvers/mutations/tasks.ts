@@ -29,7 +29,7 @@ const taskMutations = {
     doc: ITask & { proccessId: string; aboveItemId: string },
     { user, docModifier }: IContext
   ) {
-    return itemsAdd(doc, 'deal', user, docModifier, Tasks.createTask);
+    return itemsAdd(doc, 'task', user, docModifier, Tasks.createTask);
   },
 
   /**
@@ -109,7 +109,7 @@ const taskMutations = {
     }: { stageId: string; proccessId: string; type: string },
     { user }: IContext
   ) {
-    return itemsSort(stageId, type, 'deal', proccessId, user);
+    return itemsSort(stageId, type, 'task', proccessId, user);
   },
 
   async taskUpdateTimeTracking(
