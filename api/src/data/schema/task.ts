@@ -11,7 +11,7 @@ export const types = `
   type TaskListItem {
     ${commonListTypes}
   }
-    
+
   type Task {
     _id: String!
     companies: [Company]

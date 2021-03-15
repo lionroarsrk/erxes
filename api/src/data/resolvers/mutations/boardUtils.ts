@@ -627,6 +627,7 @@ export const itemsSort = async (
 
     case 'alphabetically-asc':
       sort.name = 1;
+      break;
   }
 
   const items = await collection
@@ -636,9 +637,10 @@ export const itemsSort = async (
     })
     .sort(sort);
 
-  // order notification
   const stage = await Stages.getStage(stageId);
   let orderNum = 100;
+  let aboveItemId = '';
+
   for (const item of items) {
     item.order = orderNum;
     await collection.updateOne(
@@ -650,16 +652,19 @@ export const itemsSort = async (
     graphqlPubsub.publish('pipelinesChanged', {
       pipelinesChanged: {
         _id: stage.pipelineId,
-        proccessId,
+        proccessId: Math.random(),
         action: 'orderUpdated',
         data: {
-          item,
-          destinationStageId: stage._id
+          item: { ...item._doc, ...(await itemResolver(type, item)) },
+          aboveItemId,
+          destinationStageId: stageId,
+          oldStageId: stageId
         }
       }
     });
 
     orderNum = orderNum + 10;
+    aboveItemId = item._id;
   }
 
   return 'ok';
