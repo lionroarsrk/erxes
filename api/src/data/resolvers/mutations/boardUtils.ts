@@ -9,6 +9,7 @@ import {
   Stages
 } from '../../../db/models';
 import {
+  bulkUpdateOrders,
   getCollection,
   getCompanies,
   getCustomers,
@@ -605,7 +606,6 @@ export const itemsSort = async (
   user: IUserDocument
 ) => {
   const { collection } = getCollection(type);
-  console.log(stageId, type, sortType, proccessId, user._id);
 
   const sort: { [key: string]: any } = {};
   switch (sortType) {
@@ -630,25 +630,20 @@ export const itemsSort = async (
       break;
   }
 
+  await bulkUpdateOrders({ collection, stageId, sort });
+
   const items = await collection
     .find({
       stageId,
       status: { $ne: BOARD_STATUSES.ARCHIVED }
     })
-    .sort(sort);
+    .sort({ order: 1 });
 
   const stage = await Stages.getStage(stageId);
-  let orderNum = 100;
+
   let aboveItemId = '';
 
   for (const item of items) {
-    item.order = orderNum;
-    await collection.updateOne(
-      { _id: item._id },
-      { $set: { order: orderNum } }
-    );
-    await item.save();
-
     graphqlPubsub.publish('pipelinesChanged', {
       pipelinesChanged: {
         _id: stage.pipelineId,
@@ -663,7 +658,6 @@ export const itemsSort = async (
       }
     });
 
-    orderNum = orderNum + 10;
     aboveItemId = item._id;
   }
 

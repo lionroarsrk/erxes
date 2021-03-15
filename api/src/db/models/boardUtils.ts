@@ -46,6 +46,48 @@ const orderHeler = (aboveOrder, belowOrder) => {
   return randomBetween(aboveOrder, belowOrder);
 };
 
+export const bulkUpdateOrders = async ({
+  collection,
+  stageId,
+  sort = { order: 1 }
+}: {
+  collection: any;
+  stageId: string;
+  sort?: { [key: string]: any };
+}) => {
+  const bulkOps: Array<{
+    updateOne: {
+      filter: { _id: string };
+      update: { order: number };
+    };
+  }> = [];
+
+  let ord = 100;
+
+  const allItems = await collection
+    .find(
+      {
+        stageId,
+        status: { $ne: BOARD_STATUSES.ARCHIVED }
+      },
+      { _id: 1, order: 1 }
+    )
+    .sort(sort);
+
+  for (const item of allItems) {
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: item._id },
+        update: { order: ord }
+      }
+    });
+
+    ord = ord + 10;
+  }
+
+  await collection.bulkWrite(bulkOps);
+};
+
 export const getNewOrder = async ({
   collection,
   stageId,
@@ -70,37 +112,7 @@ export const getNewOrder = async ({
 
   // if duplicated order, then in stages items bulkUpdate 100, 110, 120, 130
   if ([aboveOrder, belowOrder].includes(order)) {
-    const bulkOps: Array<{
-      updateOne: {
-        filter: { _id: string };
-        update: { order: number };
-      };
-    }> = [];
-
-    let ord = 100;
-
-    const allItems = await collection
-      .find(
-        {
-          stageId,
-          status: { $ne: BOARD_STATUSES.ARCHIVED }
-        },
-        { _id: 1, order: 1 }
-      )
-      .sort({ order: 1 });
-
-    for (const item of allItems) {
-      bulkOps.push({
-        updateOne: {
-          filter: { _id: item._id },
-          update: { order: ord }
-        }
-      });
-
-      ord = ord + 10;
-    }
-
-    await collection.bulkWrite(bulkOps);
+    bulkUpdateOrders({ collection, stageId });
     return getNewOrder({ collection, stageId, aboveItemId });
   }
 
