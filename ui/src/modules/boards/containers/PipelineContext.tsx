@@ -188,26 +188,28 @@ class PipelineProviderInner extends React.Component<Props, State> {
             });
           }
 
-          // refetch stages info ===
-          const changedStageIds: string[] = [item.stageId];
+          if (action !== 'reOrdered') {
+            // refetch stages info ===
+            const changedStageIds: string[] = [item.stageId];
 
-          if (
-            destinationStageId &&
-            !changedStageIds.includes(destinationStageId)
-          ) {
-            changedStageIds.push(destinationStageId);
-          }
+            if (
+              destinationStageId &&
+              !changedStageIds.includes(destinationStageId)
+            ) {
+              changedStageIds.push(destinationStageId);
+            }
 
-          if (oldStageId && !changedStageIds.includes(oldStageId)) {
-            changedStageIds.push(oldStageId);
-          }
+            if (oldStageId && !changedStageIds.includes(oldStageId)) {
+              changedStageIds.push(oldStageId);
+            }
 
-          for (const id of changedStageIds) {
-            client.query({
-              query: gql(queries.stageDetail),
-              fetchPolicy: 'network-only',
-              variables: { _id: id }
-            });
+            for (const id of changedStageIds) {
+              client.query({
+                query: gql(queries.stageDetail),
+                fetchPolicy: 'network-only',
+                variables: { _id: id }
+              });
+            }
           }
         }
       }
@@ -410,8 +412,10 @@ class PipelineProviderInner extends React.Component<Props, State> {
       task.isComplete = true;
     }
 
+    const newItemIds = [...itemIds, ...items.map(item => item._id)];
+
     this.setState({
-      itemIds: [...itemIds, ...items.map(item => item._id)],
+      itemIds: Array.from(new Set(newItemIds)),
       itemMap: { ...itemMap, [stageId]: items },
       stageLoadMap: { ...stageLoadMap, [stageId]: 'loaded' }
     });

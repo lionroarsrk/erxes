@@ -126,7 +126,6 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
         })
         .then(() => {
           Alert.success('Archive Items has been archived.');
-
           onLoad(stageId, []);
         })
         .catch((e: Error) => {
@@ -136,22 +135,52 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
   };
 
   sortItems = (type: string) => {
-    const { options, stage, queryParams } = this.props;
+    const { options, stage, queryParams, onLoad } = this.props;
 
     const stageId = stage._id;
 
     confirm(__(`Sort by ${type} in This List?`)).then(() => {
       const proccessId = Math.random().toString();
       localStorage.setItem('proccessId', proccessId);
-      const filterParams = getFilterParams(queryParams, options.getExtraParams);
 
       client
         .mutate({
           mutation: gql(options.mutations.sortMutation),
-          variables: { stageId, proccessId, type, filterParams }
+          variables: { stageId, proccessId, type }
+          // refetchQueries: [
+          //   {
+          //     query: gql(queries.stageDetail),
+          //     variables: { _id: stageId, proccessId }
+          //   },
+          //   {
+          //     query: gql(options.queries.itemsQuery),
+          //     variables: {
+          //       stageId: stage._id,
+          //       pipelineId: stage.pipelineId,
+          //       ...getFilterParams(queryParams, options.getExtraParams)
+          //     }
+          //   },
+          // ]
         })
         .then(() => {
           Alert.success('ReSorted items has been sorted.');
+          client
+            .query({
+              query: gql(options.queries.itemsQuery),
+              variables: {
+                stageId: stage._id,
+                pipelineId: stage.pipelineId,
+                ...getFilterParams(queryParams, options.getExtraParams)
+              },
+              fetchPolicy: 'network-only'
+            })
+            .then(({ data }: any) => {
+              const orderedItems = data[options.queriesName.itemsQuery] || [];
+              onLoad(stage._id, orderedItems);
+            })
+            .catch(e => {
+              Alert.error(e.message);
+            });
         })
         .catch((e: Error) => {
           Alert.error(e.message);

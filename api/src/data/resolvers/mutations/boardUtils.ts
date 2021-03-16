@@ -629,37 +629,22 @@ export const itemsSort = async (
       sort.name = 1;
       break;
   }
+  user._id;
 
   await bulkUpdateOrders({ collection, stageId, sort });
 
-  const items = await collection
-    .find({
-      stageId,
-      status: { $ne: BOARD_STATUSES.ARCHIVED }
-    })
-    .sort({ order: 1 });
-
   const stage = await Stages.getStage(stageId);
 
-  let aboveItemId = '';
-
-  for (const item of items) {
-    graphqlPubsub.publish('pipelinesChanged', {
-      pipelinesChanged: {
-        _id: stage.pipelineId,
-        proccessId: Math.random(),
-        action: 'orderUpdated',
-        data: {
-          item: { ...item._doc, ...(await itemResolver(type, item)) },
-          aboveItemId,
-          destinationStageId: stageId,
-          oldStageId: stageId
-        }
+  graphqlPubsub.publish('pipelinesChanged', {
+    pipelinesChanged: {
+      _id: stage.pipelineId,
+      proccessId,
+      action: 'reOrdered',
+      data: {
+        destinationStageId: stageId
       }
-    });
-
-    aboveItemId = item._id;
-  }
+    }
+  });
 
   return 'ok';
 };
