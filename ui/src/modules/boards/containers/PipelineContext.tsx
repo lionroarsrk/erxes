@@ -58,6 +58,7 @@ interface IStore {
   stageIds: string[];
   onLoadStage: (stageId: string, items: IItem[]) => void;
   scheduleStage: (stageId: string) => void;
+  refetchStage: (stageId: string) => void;
   onDragEnd: (result: IDragResult) => void;
   onAddItem: (stageId: string, item: IItem, aboveItemId?: string) => void;
   onRemoveItem: (itemId: string, stageId: string) => void;
@@ -120,6 +121,10 @@ class PipelineProviderInner extends React.Component<Props, State> {
         } = pipelinesChanged;
 
         if (proccessId !== localStorage.getItem('proccessId')) {
+          if (action === 'reOrdered') {
+            this.refetchStage(destinationStageId);
+          }
+
           if (action === 'orderUpdated') {
             let destIndex = aboveItemId
               ? this.findItemIndex(destinationStageId, aboveItemId)
@@ -421,6 +426,14 @@ class PipelineProviderInner extends React.Component<Props, State> {
     });
   };
 
+  refetchStage = (stageId: string) => {
+    const { stageLoadMap } = this.state;
+
+    this.setState({
+      stageLoadMap: { ...stageLoadMap, [stageId]: 'readyToLoad' }
+    });
+  };
+
   /*
    * Register given stage to tasks queue
    */
@@ -617,6 +630,7 @@ class PipelineProviderInner extends React.Component<Props, State> {
             onDragEnd: this.onDragEnd,
             onLoadStage: this.onLoadStage,
             scheduleStage: this.scheduleStage,
+            refetchStage: this.refetchStage,
             onAddItem: this.onAddItem,
             onRemoveItem: this.onRemoveItem,
             onUpdateItem: this.onUpdateItem,

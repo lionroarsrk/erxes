@@ -28,6 +28,7 @@ type StageProps = {
   refetchStages: ({ pipelineId }: { pipelineId?: string }) => Promise<any>;
   onLoad: (stageId: string, items: IItem[]) => void;
   scheduleStage: (stageId: string) => void;
+  refetchStage: (stageId: string) => void;
   onAddItem: (stageId: string, item: IItem, aboveItemId?: string) => void;
   onRemoveItem: (itemId: string, stageId: string) => void;
 };
@@ -46,6 +47,9 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
       // Send loaded items to PipelineContext so that context is able to set it
       // to global itemsMap
       const items = itemsQuery[options.queriesName.itemsQuery] || [];
+
+      console.log('mmmmmmmmmm', items);
+
       onLoad(stage._id, items);
     }
   }
@@ -135,7 +139,7 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
   };
 
   sortItems = (type: string) => {
-    const { options, stage, queryParams, onLoad } = this.props;
+    const { options, stage } = this.props;
 
     const stageId = stage._id;
 
@@ -163,24 +167,7 @@ class StageContainer extends React.PureComponent<FinalStageProps> {
           // ]
         })
         .then(() => {
-          Alert.success('ReSorted items has been sorted.');
-          client
-            .query({
-              query: gql(options.queries.itemsQuery),
-              variables: {
-                stageId: stage._id,
-                pipelineId: stage.pipelineId,
-                ...getFilterParams(queryParams, options.getExtraParams)
-              },
-              fetchPolicy: 'network-only'
-            })
-            .then(({ data }: any) => {
-              const orderedItems = data[options.queriesName.itemsQuery] || [];
-              onLoad(stage._id, orderedItems);
-            })
-            .catch(e => {
-              Alert.error(e.message);
-            });
+          this.props.refetchStage(stageId);
         })
         .catch((e: Error) => {
           Alert.error(e.message);
